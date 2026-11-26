@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hai la școală! · Klar til skole!</title>
+<meta name="theme-color" content="#1f8a70">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#eaf8f2; --card:#fff; --ink:#1d3b34; --muted:#6b8a82;
+  --pri:#1f8a70; --pri2:#38b593; --acc:#ff8a3d; --accl:#ffe8d6; --ok:#1fa463; --okl:#d8f5e6;
+  --bad:#e5484d; --gold:#ffc83d; --r:22px; --sh:0 4px 14px rgba(20,90,70,.13);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:"Nunito","Trebuchet MS","Segoe UI",Roboto,system-ui,sans-serif;background:var(--bg);color:var(--ink);
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:manipulation;
+  overscroll-behavior-y:contain;padding-bottom:env(safe-area-inset-bottom)}
+button{font-family:inherit;cursor:pointer;border:0;touch-action:manipulation;color:inherit}
+input{font-family:inherit;user-select:text;-webkit-user-select:text}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));background:var(--pri);color:#fff;position:sticky;top:0;z-index:5}
+header h1{font-size:20px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{background:rgba(255,255,255,.2);padding:6px 12px;border-radius:99px;font-weight:900;font-size:16px;white-space:nowrap}
+body.focus header{display:none}
+main{max-width:720px;margin:0 auto;padding:14px}
+.fade{animation:fade .25s}
+@keyframes fade{from{opacity:.3;transform:translateY(6px)}to{opacity:1}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:14px}
+.btn{background:var(--pri);color:#fff;font-size:20px;font-weight:900;padding:14px 22px;border-radius:18px;box-shadow:var(--sh)}
+.btn.sec{background:#dff3ec;color:var(--pri)}
+.btn.acc{background:var(--acc)}
+.btn.sm{font-size:16px;padding:9px 14px}
+.btn:active,.tile:active,.opt:active{transform:scale(.96)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.center{text-align:center}
+h2{margin:4px 0 12px;font-size:23px}
+h3{margin:14px 0 8px;font-size:18px}
+.muted{color:var(--muted)}
+/* buddy */
+.buddy{display:flex;align-items:flex-end;gap:10px;margin:4px 0 14px}
+.buddy .av{font-size:64px;line-height:1;animation:bob 2.4s ease-in-out infinite;cursor:pointer;flex:none}
+@keyframes bob{50%{transform:translateY(-7px)}}
+.bubble{position:relative;background:#fff;border-radius:20px;padding:12px 15px;font-size:19px;font-weight:800;box-shadow:var(--sh);flex:1;line-height:1.3}
+.bubble::before{content:"";position:absolute;left:-9px;bottom:16px;border:9px solid transparent;border-right-color:#fff;border-left:0}
+/* home */
+.hero{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:linear-gradient(135deg,var(--acc),#ffb03d);color:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);margin-bottom:14px;animation:glow 2s infinite}
+@keyframes glow{50%{box-shadow:0 0 0 6px rgba(255,138,61,.25)}}
+.hero .ico{font-size:52px}
+.hero b{display:block;font-size:24px}
+.hero small{font-size:15px;font-weight:700;opacity:.95}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px 8px;font-size:17px;font-weight:900;min-height:118px;text-align:center}
+.tile .ico{font-size:46px;line-height:1}
+.plink{display:block;margin:18px auto 4px;background:none;color:var(--muted);font-weight:800;font-size:15px;padding:10px}
+/* activity */
+.qtop{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.iconbtn{width:48px;height:48px;border-radius:14px;background:#dff3ec;color:var(--pri);font-size:22px;font-weight:900;flex:none}
+.path{flex:1;display:flex;align-items:center;gap:4px}
+.path i{flex:1;height:12px;border-radius:7px;background:#cfe9df}
+.path i.d{background:var(--pri2)}.path i.now{background:var(--gold)}
+.path b{font-size:26px}
+.qbuddy{display:flex;align-items:center;gap:8px;margin:6px 0 10px}
+.qbuddy .av{font-size:42px;flex:none;cursor:pointer}
+.qbuddy .bubble{font-size:18px;padding:10px 13px}
+.visual{text-align:center;margin:6px 0 12px}
+.bigemo{font-size:96px;line-height:1.1}
+.word{font-size:30px;font-weight:900;margin-top:4px}
+.listen{display:inline-flex;align-items:center;justify-content:center;width:120px;height:120px;border-radius:50%;background:#fff;box-shadow:var(--sh);font-size:60px}
+.opts{display:grid;gap:12px}
+.opts.c2{grid-template-columns:1fr 1fr}.opts.c3{grid-template-columns:1fr 1fr 1fr}.opts.c1{grid-template-columns:1fr}
+.opt{position:relative;background:#fff;border:4px solid #d3ece3;border-radius:20px;min-height:96px;font-size:50px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:8px;box-shadow:var(--sh);transition:opacity .2s}
+.opt.txt{font-size:19px;justify-content:flex-start;gap:12px;text-align:left;min-height:80px;padding:10px 54px 10px 12px;line-height:1.25}
+.opt.txt .e{font-size:40px;flex:none}
+.opt .spk{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:12px;background:#dff3ec;font-size:18px;display:flex;align-items:center;justify-content:center}
+.opt.ok{border-color:var(--ok);background:var(--okl)}
+.opt.no{opacity:.35}
+.opt.glow{border-color:var(--gold);animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(255,200,61,.45)}}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.grp{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;font-size:30px;line-height:1.1}
+.cnt{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:420px;margin:0 auto}
+.cnt span{position:relative;font-size:44px;cursor:pointer;width:58px;height:58px;display:flex;align-items:center;justify-content:center;border-radius:14px}
+.cnt span.t{background:#fff3c4}
+.cnt span em{position:absolute;right:-2px;top:-4px;background:var(--pri);color:#fff;font-style:normal;font-size:14px;font-weight:900;border-radius:99px;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.seq{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;font-size:44px}
+.seq .box{width:70px;height:70px;border-radius:16px;background:#fff;box-shadow:var(--sh);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900}
+.fb{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:14px;margin-top:14px;font-size:19px;font-weight:800;line-height:1.35}
+.fb .row{margin-top:12px}
+.badge{position:absolute;left:6px;top:6px;background:var(--pri);color:#fff;font-size:18px;border-radius:99px;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+/* story */
+.story{background:#fff;border-radius:26px;box-shadow:var(--sh);padding:20px 16px;text-align:center}
+.story .bigemo{font-size:100px;margin:4px 0 10px}
+.story p{font-size:22px;font-weight:800;line-height:1.4;margin:0 0 14px}
+.dk{display:inline-flex;align-items:center;gap:8px;background:#fff1f1;color:#b4232a;border:2px solid #f6c3c5;border-radius:99px;padding:8px 14px;font-weight:900;font-size:19px}
+.snav{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px}
+.dots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.dots i{width:10px;height:10px;border-radius:50%;background:#cfe9df}.dots i.d{background:var(--pri2)}
+/* bag */
+.bagbox{text-align:center;font-size:110px;line-height:1;margin:6px 0}
+.bagbox.pop{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.15)}}
+.items{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.item{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:10px 4px;font-size:52px;line-height:1;display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .45s,opacity .45s}
+.item small{font-size:14px;font-weight:900}
+.item.gone{transform:translateY(-220px) scale(.3);opacity:0;pointer-events:none}
+/* breathe */
+.balloon{width:150px;height:150px;border-radius:50%;margin:30px auto;background:radial-gradient(circle at 35% 30%,#ffd0de,#ff6f91);box-shadow:0 10px 30px rgba(255,111,145,.4);transform:scale(.55);transition:transform 4s ease-in-out}
+.balloon.in{transform:scale(1.25)}
+.breath-t{font-size:30px;font-weight:900;text-align:center;min-height:42px}
+/* phrases */
+.ph{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border-radius:20px;box-shadow:var(--sh);padding:12px 14px;margin-bottom:10px}
+.ph .e{font-size:40px;flex:none}
+.ph b{display:block;font-size:20px;color:#b4232a}
+.ph small{font-size:16px;font-weight:700;color:var(--muted)}
+/* album */
+.album{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.album div{background:#fff;border-radius:16px;box-shadow:var(--sh);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:40px}
+.album div.lock{background:#e3f1ec;font-size:26px;color:#a5c4ba;box-shadow:none}
+/* reward */
+.gift{font-size:130px;display:block;margin:20px auto;background:none;animation:wob 1s infinite}
+@keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.sticker{font-size:140px;text-align:center;animation:zoom .6s}
+@keyframes zoom{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1)}}
+/* move break */
+.ring{width:150px;height:150px;margin:10px auto}
+.ring circle{fill:none;stroke-width:12}
+.mv{font-size:110px;text-align:center;animation:jump .8s infinite}
+@keyframes jump{50%{transform:translateY(-18px)}}
+/* parents */
+.lbl{display:block;font-weight:900;margin:14px 0 6px}
+.inp{width:100%;font-size:20px;padding:12px;border:3px solid #cfe9df;border-radius:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:10px 14px;border-radius:14px;background:#dff3ec;color:var(--pri);font-weight:900;font-size:17px}
+.chip.on{background:var(--pri);color:#fff}
+.chip.av{font-size:34px;padding:6px 10px}
+.ck{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin:10px 0}
+.ck input{width:26px;height:26px;accent-color:var(--pri);flex:none}
+.tips li{margin-bottom:8px;line-height:1.4}
+.stat{display:flex;gap:8px;flex-wrap:wrap}
+.stat span{background:#dff3ec;border-radius:12px;padding:8px 12px;font-weight:800}
+.star{position:fixed;font-size:34px;pointer-events:none;z-index:50;animation:fly 1s forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(.4);opacity:0}}
+.small{font-size:14px}
+</style>
+</head>
+<body>
+<header id="hdr"><h1 id="ttl"></h1><span class="pill" id="starPill">⭐ 0</span></header>
+<main id="app"></main>
+<script>
+/* ================= DATE ================= */
+const SL={ro:'ro-RO',da:'da-DK'};
+const BUDDIES=['🐻','🦊','🐶','🦖','🐼','🐯','🐸','🤖'];
+const STICKERS=['🦖','🦕','🐙','🦄','🐳','🦁','🐯','🐼','🐨','🦊','🐸','🦉','🦋','🐞','🐢','🦈','🐬','🦜','🚒','🚓','🚑','🚜','🚀','🛸','🚂','🚁','⛵','🏎️','🦸','⚽','🏀','🎸','🎈','🌈','🍕','🍦'];
+const ROT=['story','bag','letters','scen','numbers','phrases','feel'];
+const ICO={story:'🏫',bag:'🎒',scen:'🤔',phrases:'🗣️',letters:'🔤',numbers:'🔢',feel:'😊',breathe:'🎈',album:'📒'};
+
+const STORY=[
+ {e:'⏰☀️',ro:'Dimineața mă trezesc, mă îmbrac și mănânc micul dejun.',da:'Om morgenen står jeg op, tager tøj på og spiser morgenmad.',w:'morgenmad'},
+ {e:'🎒',ro:'Îmi iau ghiozdanul. În el sunt pachetul cu mâncare, sticla cu apă și penarul.',da:'Jeg tager min skoletaske. I den er min madpakke, min drikkedunk og mit penalhus.',w:'skoletaske'},
+ {e:'🏫👋',ro:'Mama sau tata mă duce la școală și îmi spune „pa”. Ei vin mereu înapoi să mă ia.',da:'Mor eller far følger mig i skole og siger farvel. De kommer altid tilbage og henter mig.',w:'farvel'},
+ {e:'🧥',ro:'Îmi agăț geaca în cuier și îmi găsesc locul în clasă.',da:'Jeg hænger min jakke på knagen og finder min plads i klassen.',w:'knagen'},
+ {e:'🧑‍🏫',ro:'Stăm în cerc și ne spunem „bună dimineața”. În Danemarca le spunem adulților de la școală pe prenume.',da:'Vi sidder i rundkreds og siger godmorgen. Vi kalder de voksne på skolen ved deres fornavn.',w:'rundkreds'},
+ {e:'🔤🔢🎨',ro:'Învățăm litere și numere, desenăm, cântăm și ne jucăm.',da:'Vi lærer bogstaver og tal, tegner, synger og leger.',w:'bogstaver og tal'},
+ {e:'✋',ro:'Când vreau să spun ceva, ridic mâna și aștept să-mi vină rândul.',da:'Når jeg vil sige noget, rækker jeg hånden op og venter på min tur.',w:'række hånden op'},
+ {e:'🔔⚽',ro:'Sună clopoțelul: e pauză! Ieșim afară să ne jucăm. Un adult are mereu grijă de noi.',da:'Klokken ringer: det er frikvarter! Vi går ud og leger. Der er altid en voksen, der passer på os.',w:'frikvarter'},
+ {e:'🥪',ro:'La pauza de masă mâncăm împreună, la masă, din pachetul adus de acasă.',da:'I spisefrikvarteret spiser vi vores madpakke sammen ved bordet.',w:'madpakke'},
+ {e:'🚽',ro:'Dacă trebuie la toaletă, întreb: „Må jeg gå på toilettet?” Și am voie.',da:'Hvis jeg skal på toilettet, spørger jeg: „Må jeg gå på toilettet?” Og det må jeg gerne.',w:'Må jeg gå på toilettet?'},
+ {e:'🧩🏡',ro:'După ore merg la SFO. Acolo mă joc cu prietenii până vine cineva să mă ia.',da:'Efter skole går jeg i SFO. Der leger jeg med mine venner, til jeg bliver hentet.',w:'SFO'},
+ {e:'🤗',ro:'Mama sau tata vine să mă ia. Le povestesc ce am făcut azi. Ce zi frumoasă!',da:'Mor eller far henter mig. Jeg fortæller, hvad jeg har lavet i dag. Sikke en god dag!',w:'hentet'}
+];
+
+const SCEN=[
+ {e:'🚽',q:{ro:'Ești la oră și trebuie la toaletă. Ce faci?',da:'Du er i timen og skal på toilettet. Hvad gør du?'},o:[
+  {e:'✋',ok:1,ro:'Ridic mâna și întreb adultul.',da:'Jeg rækker hånden op og spørger den voksne.',fb:{ro:'Exact! Poți spune: „Må jeg gå på toilettet?”',da:'Præcis! Du kan sige: „Må jeg gå på toilettet?”'}},
+  {e:'🤐',ro:'Mă țin până ajung acasă.',da:'Jeg holder mig, til jeg kommer hjem.',fb:{ro:'Nu e nevoie să aștepți! La școală ai voie la toaletă.',da:'Du behøver ikke vente! På skolen må du godt gå på toilettet.'}},
+  {e:'🏃',ro:'Fug afară fără să spun nimic.',da:'Jeg løber ud uden at sige noget.',fb:{ro:'Adultul trebuie să știe unde ești. Mai bine întrebi.',da:'Den voksne skal vide, hvor du er. Det er bedre at spørge.'}}]},
+ {e:'🥺',q:{ro:'Ți-e dor de mama sau de tata. Ce faci?',da:'Du savner mor eller far. Hvad gør du?'},o:[
+  {e:'🧑‍🏫',ok:1,ro:'Spun unui adult de la școală.',da:'Jeg siger det til en voksen på skolen.',fb:{ro:'Da! Adulții te ajută. Și mama sau tata vine sigur să te ia.',da:'Ja! De voksne hjælper dig. Og mor eller far kommer helt sikkert og henter dig.'}},
+  {e:'😶',ro:'Nu spun nimănui și stau singur.',da:'Jeg siger det ikke til nogen og sidder alene.',fb:{ro:'Mai bine spui. E normal să-ți fie dor de cineva.',da:'Det er bedre at sige det. Det er helt okay at savne nogen.'}}]},
+ {e:'🤷',q:{ro:'Nu înțelegi ce trebuie să faci. Ce faci?',da:'Du forstår ikke, hvad du skal lave. Hvad gør du?'},o:[
+  {e:'🙋',ok:1,ro:'Întreb: „Kan du hjælpe mig?”',da:'Jeg spørger: „Kan du hjælpe mig?”',fb:{ro:'Bravo! Toți copiii întreabă. Așa învățăm.',da:'Godt! Alle børn spørger. Sådan lærer man.'}},
+  {e:'🙈',ro:'Mă ascund și nu fac nimic.',da:'Jeg gemmer mig og laver ingenting.'},
+  {e:'😩',ro:'Renunț.',da:'Jeg giver op.'}]},
+ {e:'🔔',q:{ro:'Sună clopoțelul la sfârșitul pauzei. Ce faci?',da:'Klokken ringer, og frikvarteret er slut. Hvad gør du?'},o:[
+  {e:'🚶',ok:1,ro:'Merg înapoi în clasă.',da:'Jeg går ind i klassen igen.',fb:{ro:'Corect! Te joci iar la pauza următoare.',da:'Rigtigt! Du kan lege igen i næste frikvarter.'}},
+  {e:'⚽',ro:'Rămân afară și mă joc mai departe.',da:'Jeg bliver ude og leger videre.',fb:{ro:'Clopoțelul înseamnă: înapoi în clasă.',da:'Klokken betyder: ind i klassen.'}}]},
+ {e:'🧸',q:{ro:'Un copil îți ia jucăria. Ce faci?',da:'Et barn tager dit legetøj. Hvad gør du?'},o:[
+  {e:'🗣️',ok:1,ro:'Spun: „Stop, det kan jeg ikke lide!” Dacă nu se oprește, chem un adult.',da:'Jeg siger: „Stop, det kan jeg ikke lide!” Hvis det ikke stopper, henter jeg en voksen.',fb:{ro:'Foarte bine! Cuvintele tale sunt puternice.',da:'Rigtig godt! Dine ord er stærke.'}},
+  {e:'👊',ro:'Îl lovesc.',da:'Jeg slår.',fb:{ro:'Nu lovim. Folosim cuvintele și chemăm un adult.',da:'Vi slår ikke. Vi bruger ord og henter en voksen.'}}]},
+ {e:'😔',q:{ro:'Un copil stă singur și pare trist. Ce poți face?',da:'Et barn står alene og ser ked ud af det. Hvad kan du gøre?'},o:[
+  {e:'🤝',ok:1,ro:'Îl întreb: „Vil du lege med mig?”',da:'Jeg spørger: „Vil du lege med mig?”',fb:{ro:'Ce frumos! Așa se fac prietenii.',da:'Hvor er du sød! Sådan får man venner.'}},
+  {e:'😝',ro:'Îl tachinez.',da:'Jeg driller.',fb:{ro:'Asta l-ar întrista și mai tare.',da:'Så bliver barnet endnu mere ked af det.'}}]},
+ {e:'✏️',q:{ro:'Ai greșit la o sarcină. Ce faci?',da:'Du har lavet en fejl. Hvad gør du?'},o:[
+  {e:'💪',ok:1,ro:'Spun „e în regulă” și încerc din nou.',da:'Jeg siger „det er okay” og prøver igen.',fb:{ro:'Super! Greșelile ne ajută să învățăm.',da:'Super! Fejl hjælper os med at lære.'}},
+  {e:'😡',ro:'Mă supăr și arunc foaia.',da:'Jeg bliver sur og smider papiret væk.'}]},
+ {e:'🗺️',q:{ro:'Nu-ți găsești clasa. Ce faci?',da:'Du kan ikke finde din klasse. Hvad gør du?'},o:[
+  {e:'🧑‍🏫',ok:1,ro:'Caut un adult de la școală și cer ajutor.',da:'Jeg finder en voksen på skolen og beder om hjælp.',fb:{ro:'Exact! Adulții de la școală te ajută mereu.',da:'Præcis! De voksne på skolen hjælper dig altid.'}},
+  {e:'🚪',ro:'Plec singur acasă.',da:'Jeg går alene hjem.',fb:{ro:'Nu pleca niciodată singur. Cere ajutor unui adult.',da:'Gå aldrig alene hjem. Bed en voksen om hjælp.'}}]},
+ {e:'🗣️',q:{ro:'Adultul vorbește și tu vrei să spui ceva. Ce faci?',da:'Den voksne taler, og du vil sige noget. Hvad gør du?'},o:[
+  {e:'✋',ok:1,ro:'Ridic mâna și aștept.',da:'Jeg rækker hånden op og venter.',fb:{ro:'Bravo! Așa îți vine rândul.',da:'Flot! Så får du din tur.'}},
+  {e:'📢',ro:'Strig tare.',da:'Jeg råber højt.'}]},
+ {e:'😠',breathe:1,q:{ro:'Ești foarte furios. Ce te ajută?',da:'Du er meget vred. Hvad hjælper?'},o:[
+  {e:'🎈',ok:1,ro:'Respir adânc, ca un balon, de 3 ori.',da:'Jeg trækker vejret dybt som en ballon, 3 gange.',fb:{ro:'Da! Respirația te liniștește. Vrei să încercăm acum?',da:'Ja! Vejrtrækning gør dig rolig. Skal vi prøve nu?'}},
+  {e:'🗯️',ro:'Țip și dau cu piciorul.',da:'Jeg skriger og sparker.'}]}
+];
+
+const PHRASES=[
+ {e:'👋',da:'Godmorgen!',ro:'Bună dimineața!',sit:{ro:'Ajungi dimineața la școală.',da:'Du kommer i skole om morgenen.'}},
+ {e:'🚽',da:'Må jeg gå på toilettet?',ro:'Pot să merg la toaletă?',sit:{ro:'Trebuie la toaletă.',da:'Du skal på toilettet.'}},
+ {e:'🙋',da:'Kan du hjælpe mig?',ro:'Mă poți ajuta?',sit:{ro:'Ai nevoie de ajutor.',da:'Du har brug for hjælp.'}},
+ {e:'🤷',da:'Jeg forstår det ikke.',ro:'Nu înțeleg.',sit:{ro:'Nu ai înțeles ce a spus adultul.',da:'Du forstod ikke, hvad den voksne sagde.'}},
+ {e:'✋',da:'Stop, det kan jeg ikke lide!',ro:'Stop, nu-mi place asta!',sit:{ro:'Cineva te împinge și nu-ți place.',da:'Nogen skubber dig, og du kan ikke lide det.'}},
+ {e:'🤝',da:'Vil du lege med mig?',ro:'Vrei să te joci cu mine?',sit:{ro:'Vrei să te joci cu un copil.',da:'Du vil gerne lege med et andet barn.'}},
+ {e:'🥤',da:'Jeg er tørstig.',ro:'Mi-e sete.',sit:{ro:'Ți-e sete.',da:'Du er tørstig.'}},
+ {e:'🤕',da:'Jeg har slået mig.',ro:'M-am lovit.',sit:{ro:'Ai căzut și te doare.',da:'Du er faldet og har slået dig.'}},
+ {e:'🙏',da:'Tak!',ro:'Mulțumesc!',sit:{ro:'Cineva te-a ajutat.',da:'Nogen har hjulpet dig.'}}
+];
+
+const BAG=[
+ {e:'🥪',ok:1,ro:'pachetul cu mâncare',da:'madpakke'},
+ {e:'🥤',ok:1,ro:'sticla cu apă',da:'drikkedunk'},
+ {e:'✏️',ok:1,ro:'penarul',da:'penalhus'},
+ {e:'👕',ok:1,ro:'hainele de schimb',da:'skiftetøj'},
+ {e:'☔',ok:1,ro:'hainele de ploaie',da:'regntøj'},
+ {e:'👟',ok:1,ro:'echipamentul de sport',da:'idrætstøj'},
+ {e:'🎮',ro:'consola de jocuri',da:'spillekonsollen'},
+ {e:'🍭',ro:'bomboanele',da:'slikket'},
+ {e:'📺',ro:'televizorul',da:'fjernsynet'},
+ {e:'🐈',ro:'pisica',da:'katten'},
+ {e:'🛏️',ro:'patul',da:'sengen'}
+];
+
+const ALPH={
+ da:'A B C D E F G H I J K L M N O P R S T U V Y Æ Ø Å'.split(' '),
+ ro:'A Ă Â B C D E F G H I Î J L M N O P R S Ș T Ț U V Z'.split(' ')
+};
+const WORDS={
+ da:{A:['abe','🐒'],B:['bil','🚗'],C:['citron','🍋'],D:['due','🕊️'],E:['elefant','🐘'],F:['fisk','🐟'],G:['gris','🐷'],H:['hund','🐶'],I:['is','🍦'],J:['jordbær','🍓'],K:['kat','🐱'],L:['løve','🦁'],M:['mus','🐭'],N:['næse','👃'],O:['ost','🧀'],P:['pingvin','🐧'],R:['ræv','🦊'],S:['sol','☀️'],T:['tog','🚂'],U:['ugle','🦉'],V:['vulkan','🌋'],Æ:['æble','🍎'],Ø:['øre','👂']},
+ ro:{A:['albină','🐝'],B:['banană','🍌'],C:['casă','🏠'],D:['delfin','🐬'],E:['elefant','🐘'],F:['floare','🌸'],G:['girafă','🦒'],H:['hipopotam','🦛'],I:['iepure','🐰'],Î:['înghețată','🍦'],J:['jucărie','🧸'],L:['lună','🌙'],M:['mașină','🚗'],N:['nor','☁️'],O:['ou','🥚'],P:['pește','🐟'],R:['rață','🦆'],S:['soare','☀️'],Ș:['șoarece','🐭'],T:['tren','🚂'],Ț:['țestoasă','🐢'],U:['urs','🐻'],V:['vapor','🚢'],Z:['zebră','🦓']}
+};
+const FEEL=[
+ {e:'😊',ro:'bucuros',da:'glad',tip:{ro:'Când ești bucuros, poți împărți bucuria cu alții!',da:'Når du er glad, kan du dele glæden med andre!'}},
+ {e:'😢',ro:'trist',da:'ked af det',tip:{ro:'Când ești trist, spune unui adult. O îmbrățișare ajută.',da:'Når du er ked af det, så sig det til en voksen. Et kram hjælper.'}},
+ {e:'😠',ro:'furios',da:'vred',tip:{ro:'Când ești furios, respiră adânc, ca un balon.',da:'Når du er vred, så træk vejret dybt som en ballon.'},breathe:1},
+ {e:'😨',ro:'speriat',da:'bange',tip:{ro:'Când ți-e frică, caută un adult. Adulții au grijă de tine.',da:'Når du er bange, så find en voksen. De voksne passer på dig.'}},
+ {e:'😮',ro:'surprins',da:'overrasket',tip:{ro:'Surpriză! S-a întâmplat ceva neașteptat.',da:'Overraskelse! Der skete noget uventet.'}},
+ {e:'😴',ro:'obosit',da:'træt',tip:{ro:'Când ești obosit, ajută o pauză sau un somn bun.',da:'Når du er træt, hjælper en pause eller en god søvn.'}}
+];
+const MOVES=[
+ {e:'🐸',ro:'Sari ca o broscuță!',da:'Hop som en frø!'},
+ {e:'🦩',ro:'Stai într-un picior, ca un flamingo!',da:'Stå på ét ben som en flamingo!'},
+ {e:'🦒',ro:'Întinde-te sus, sus, ca o girafă!',da:'Stræk dig højt op som en giraf!'},
+ {e:'👏',ro:'Bate din palme de 10 ori!',da:'Klap i hænderne 10 gange!'},
+ {e:'🐻',ro:'Mergi ca un urs, pe mâini și picioare!',da:'Gå som en bjørn på hænder og fødder!'},
+ {e:'🚀',ro:'Ghemuiește-te mic și sari ca o rachetă!',da:'Krøb sammen og hop op som en raket!'}
+];
+const OBJ=['🍎','🐞','⭐','🚗','🐟','🎈','🦆','🍓'];
+const SHAPES={
+ circle:{ro:'cercul',da:'cirklen',svg:c=>`<svg viewBox="0 0 100 100" width="76" height="76"><circle cx="50" cy="50" r="40" fill="${c}"/></svg>`},
+ triangle:{ro:'triunghiul',da:'trekanten',svg:c=>`<svg viewBox="0 0 100 100" width="76" height="76"><polygon points="50,10 92,88 8,88" fill="${c}"/></svg>`},
+ square:{ro:'pătratul',da:'firkanten',svg:c=>`<svg viewBox="0 0 100 100" width="76" height="76"><rect x="12" y="12" width="76" height="76" rx="4" fill="${c}"/></svg>`}
+};
+const COLORS=['#4f7cff','#ff8a3d','#1fa463','#e5484d','#a259ff'];
+
+/* ================= TEXTE ================= */
+function roPl(n,s,p){return n===1?'o '+s:((n%100>=20||(n%100===0&&n>0))?`${n} de ${p}`:`${n} ${p}`);}
+const T={
+ro:{
+ appName:'Hai la școală!',
+ obLang:'Alege limba / Vælg sprog',
+ obName:'Pentru părinte: cum îl cheamă pe băiat?', namePh:'Prenumele copilului', obDate:'Prima zi de școală (o puteți schimba oricând)', next:'Mai departe ▶',
+ obBuddy:n=>`${n}, alege-ți un prieten!`,
+ meet:n=>`Bună, ${n}! Eu sunt prietenul tău. Te ajut să te pregătești pentru școală. Va fi distractiv!`,
+ hello:n=>`Bună, ${n}!`,
+ cdMonths:m=>`Mai sunt cam ${roPl(m,'lună','luni')} până la școală. Ne pregătim împreună! 🎒`,
+ cdNights:n=>`Mai sunt ${roPl(n,'noapte de dormit','nopți de dormit')} până la școală! 🎒`,
+ cdDone:'Acum ești școlar! Ce tare! 🎉', cdNone:'Hai să ne pregătim pentru școală! 🎒',
+ sfo:n=>` La SFO mergi peste ${roPl(n,'zi','zile')}.`,
+ todayM:'Misiunea de azi', go:'Începe!',
+ k:{story:'Ziua mea la școală',bag:'Ghiozdanul',scen:'Ce faci dacă…?',phrases:'Cuvinte magice',letters:'Litere',numbers:'Numere',feel:'Emoții',breathe:'Respiră cu balonul',album:'Albumul meu'},
+ parents:'👨‍👩‍👦 Pentru părinți',
+ praise:n=>[`Bravo, ${n}!`,'Super!','Ce isteț ești!','Da! Exact!',`Minunat, ${n}!`,'Așa da!'],
+ lookAgain:'Încet… uită-te încă o dată 👀', tryAgain:'Aproape! Mai încearcă 😊', gentle:'Hmm, poate altceva ajută mai mult. Mai încearcă!',
+ idle:n=>`Hei, ${n}, sunt aici! Hai să continuăm 😊`,
+ findLetter:ch=>`Găsește litera ${ch}.`, findName:(ch,n)=>`Prima literă din numele tău, ${n}, este ${ch}. Găsește litera ${ch}!`,
+ startsWith:w=>`Cu ce literă începe „${w}”?`,
+ count:'Câte sunt? Atinge-le și numără!', findNum:n=>`Găsește numărul ${n}.`, more:'Unde sunt mai multe?', findShape:s=>`Găsește ${s}.`, pattern:'Ce urmează?', after:n=>`Ce număr vine după ${n}?`,
+ feelQ:w=>`Arată-mi cine e ${w}.`,
+ orderQ:'Ce se întâmplă mai întâi? Atinge pozele în ordine.',
+ sayWhat:'Ce spui?',
+ storyIntro:'Hai să vedem cum arată o zi la școală!', storyGame:'🧩 Joc: pune în ordine', prev:'◀', nxt:'▶',
+ bagQ:'Ce punem în ghiozdan? Atinge lucrurile pentru școală!', bagIn:(ro,da)=>`${ro}. În daneză: `, bagNo:ro=>`Haha! ${ro} rămâne acasă!`, bagDone:'Ghiozdanul e gata! Ești pregătit!',
+ bagGym:'Echipamentul de sport îl iei în zilele cu sport.',
+ phIntro:'Cuvinte magice în daneză. Atinge și ascultă!', phPlay:'🎮 Hai să ne jucăm',
+ breatheIn:'Inspiră…', breatheOut:'Expiră…', breatheGo:'Respirăm împreună. Privește balonul.', breatheDone:'Bravo! Acum ești mai liniștit.', breatheBtn:'🎈 Hai să respirăm',
+ gift:'Atinge cadoul!', newSticker:'Ai primit un abțibild nou pentru album!', cont:'Mai departe ▶', home:'🏠 Acasă',
+ moveT:'Pauză de mișcare!', moveDone:'Gata! Bravo!', skip:'Sari peste',
+ doneToday:n=>`Gata pe azi, ${n}! Ai lucrat super. Creierul tău crește în somn. Ne vedem mâine! 😴`,
+ oneMore:'Părinte: încă o rundă',
+ albumT:(a,b)=>`Abțibilduri: ${a} din ${b}`,
+ gateQ:(a,b)=>`Pentru părinți: cât face ${a} + ${b}?`, ok:'OK', back:'◀ Înapoi',
+ pT:'Pentru părinți', pLang:'Limba', pName:'Numele copilului', pBuddy:'Prietenul', pSchool:'Prima zi de școală (0. klasse)', pSchoolNote:'Am pus o dată estimată. Data exactă o găsiți pe Aula sau pe site-ul școlii.', pSfo:'Începutul SFO (opțional — în multe comune e în aprilie)',
+ pLen:'Întrebări într-o rundă', pMax:'Runde pe zi', pInf:'fără limită',
+ pSpeak:'Citește automat cu voce tare (foarte important: el nu citește încă)', pSound:'Sunete', pVib:'Vibrații', pMoves:'Pauze de mișcare între runde',
+ testVoice:'🔊 Testează vocea', voiceSample:n=>`Bună, ${n}! Eu îți citesc totul cu voce tare.`,
+ ttsNone:'Acest browser nu poate citi cu voce. Deschide aplicația în Chrome.',
+ ttsNoVoice:'Nu am găsit pe telefon vocea română. Pe Samsung: Setări → Gestionare generală → Limbă → Ieșire text în vorbire → motor „Google” → ⚙️ → Instalare date vocale → Română (și Dansk). Apoi redeschide aplicația.',
+ ttsOk:v=>`Vocea folosită: ${v}. Dacă nu se aude nimic, dă mai tare volumul media 🔉.`, ttsErr:e=>`Vocea nu a pornit (${e}). Verifică volumul media.`,
+ pProg:'Progres', sStars:n=>`⭐ ${n} stele`, sSt:n=>`📒 ${n} abțibilduri`, sDays:n=>`📅 ${n} zile de joc`, sLet:n=>`🔤 ${n} litere sigure`, sNum:n=>`🔢 numere până la ${n}`, sToday:n=>`Azi: ${n} runde`,
+ pTips:'Sfaturi',
+ tips:['O rundă durează 2–3 minute. 2–4 runde pe zi, la aceeași oră, sunt mai utile decât o sesiune lungă. Rutina e ea însăși pregătire pentru școală.',
+  'Citiți „Ziua mea la școală” de mai multe ori până în august. Repetiția face ca necunoscutul să devină cunoscut, iar asta scade frica.',
+  'Răspunsurile greșite nu sunt penalizate: după a doua încercare, răspunsul corect strălucește. Așa copilul nu se blochează și nu se frustrează.',
+  'Dacă puteți, vizitați curtea școlii în vacanță și faceți poze la clasă, cuier și SFO. Apoi povestiți pe baza lor.',
+  '„Cuvintele magice” sunt fraze daneze pe care le va folosi din prima zi (toaletă, ajutor, „stop”). Exersați-le și în joacă, acasă.',
+  'Aplicația nu evaluează și nu diagnostichează nimic. E doar exercițiu prin joc.'],
+ reset:'Șterge tot progresul', resetSure:'Apasă încă o dată ca să confirmi', saved:'Salvat ✔', close:'✔ Gata'
+},
+da:{
+ appName:'Klar til skole!',
+ obLang:'Alege limba / Vælg sprog',
+ obName:'Til forælderen: hvad hedder drengen?', namePh:'Barnets fornavn', obDate:'Første skoledag (kan ændres når som helst)', next:'Videre ▶',
+ obBuddy:n=>`${n}, vælg en ven!`,
+ meet:n=>`Hej, ${n}! Jeg er din ven. Jeg hjælper dig med at blive klar til skolen. Det bliver sjovt!`,
+ hello:n=>`Hej, ${n}!`,
+ cdMonths:m=>`Der er cirka ${m} ${m===1?'måned':'måneder'}, til du skal i skole. Vi øver sammen! 🎒`,
+ cdNights:n=>`Der er ${n} ${n===1?'nat':'nætter'}, til du skal i skole! 🎒`,
+ cdDone:'Nu går du i skole! Hvor er du sej! 🎉', cdNone:'Lad os blive klar til skolen! 🎒',
+ sfo:n=>` Du starter i SFO om ${n} ${n===1?'dag':'dage'}.`,
+ todayM:'Dagens mission', go:'Start!',
+ k:{story:'Min skoledag',bag:'Skoletasken',scen:'Hvad gør du, hvis…?',phrases:'Magiske ord',letters:'Bogstaver',numbers:'Tal',feel:'Følelser',breathe:'Træk vejret med ballonen',album:'Mit album'},
+ parents:'👨‍👩‍👦 Til forældre',
+ praise:n=>[`Godt gået, ${n}!`,'Super!','Hvor er du klog!','Ja! Præcis!',`Flot, ${n}!`,'Sådan!'],
+ lookAgain:'Stille og roligt… kig en gang til 👀', tryAgain:'Næsten! Prøv igen 😊', gentle:'Hmm, måske hjælper noget andet bedre. Prøv igen!',
+ idle:n=>`Hej, ${n}, jeg er her! Lad os fortsætte 😊`,
+ findLetter:ch=>`Find bogstavet ${ch}.`, findName:(ch,n)=>`Det første bogstav i dit navn, ${n}, er ${ch}. Find bogstavet ${ch}!`,
+ startsWith:w=>`Hvilket bogstav starter „${w}” med?`,
+ count:'Hvor mange er der? Tryk på dem og tæl!', findNum:n=>`Find tallet ${n}.`, more:'Hvor er der flest?', findShape:s=>`Find ${s}.`, pattern:'Hvad kommer så?', after:n=>`Hvilket tal kommer efter ${n}?`,
+ feelQ:w=>`Find den, der er ${w}.`,
+ orderQ:'Hvad sker der først? Tryk på billederne i rækkefølge.',
+ sayWhat:'Hvad siger du?',
+ storyIntro:'Lad os se, hvordan en dag i skolen er!', storyGame:'🧩 Spil: sæt i rækkefølge', prev:'◀', nxt:'▶',
+ bagQ:'Hvad skal i skoletasken? Tryk på tingene til skolen!', bagIn:(ro,da)=>'', bagNo:da=>`Haha! ${da[0].toUpperCase()+da.slice(1)} bliver derhjemme!`, bagDone:'Skoletasken er klar! Du er klar!',
+ bagGym:'Idrætstøj tager du med på dage med idræt.',
+ phIntro:'Magiske ord på dansk. Tryk og lyt!', phPlay:'🎮 Lad os spille',
+ breatheIn:'Træk vejret ind…', breatheOut:'Og pust ud…', breatheGo:'Vi trækker vejret sammen. Kig på ballonen.', breatheDone:'Flot! Nu er du mere rolig.', breatheBtn:'🎈 Lad os trække vejret',
+ gift:'Tryk på gaven!', newSticker:'Du har fået et nyt klistermærke til dit album!', cont:'Videre ▶', home:'🏠 Hjem',
+ moveT:'Bevægelsespause!', moveDone:'Færdig! Flot!', skip:'Spring over',
+ doneToday:n=>`Det var det for i dag, ${n}! Du har arbejdet super godt. Din hjerne vokser, når du sover. Vi ses i morgen! 😴`,
+ oneMore:'Forælder: én runde mere',
+ albumT:(a,b)=>`Klistermærker: ${a} af ${b}`,
+ gateQ:(a,b)=>`Til forældre: hvad er ${a} + ${b}?`, ok:'OK', back:'◀ Tilbage',
+ pT:'Til forældre', pLang:'Sprog', pName:'Barnets navn', pBuddy:'Vennen', pSchool:'Første skoledag (0. klasse)', pSchoolNote:'Datoen er et skøn. Den præcise dato står på Aula eller skolens hjemmeside.', pSfo:'SFO-start (valgfrit — i mange kommuner i april)',
+ pLen:'Opgaver pr. runde', pMax:'Runder pr. dag', pInf:'ingen grænse',
+ pSpeak:'Læs alt højt automatisk (vigtigt: han kan ikke læse endnu)', pSound:'Lyde', pVib:'Vibration', pMoves:'Bevægelsespauser mellem runder',
+ testVoice:'🔊 Test stemmen', voiceSample:n=>`Hej, ${n}! Jeg læser alt højt for dig.`,
+ ttsNone:'Denne browser kan ikke læse op. Åbn appen i Chrome.',
+ ttsNoVoice:'Jeg kunne ikke finde en dansk stemme. På Samsung: Indstillinger → Generel administration → Sprog → Tekst-til-tale → motor „Google” → ⚙️ → Installer stemmedata → Dansk (og Română). Åbn appen igen.',
+ ttsOk:v=>`Stemme: ${v}. Hvis der ikke er lyd, så skru op for medielydstyrken 🔉.`, ttsErr:e=>`Stemmen startede ikke (${e}). Tjek medielydstyrken.`,
+ pProg:'Fremskridt', sStars:n=>`⭐ ${n} stjerner`, sSt:n=>`📒 ${n} klistermærker`, sDays:n=>`📅 ${n} dage`, sLet:n=>`🔤 ${n} sikre bogstaver`, sNum:n=>`🔢 tal op til ${n}`, sToday:n=>`I dag: ${n} runder`,
+ pTips:'Gode råd',
+ tips:['En runde tager 2–3 minutter. 2–4 runder om dagen, på samme tidspunkt, virker bedre end én lang omgang. Rutinen er i sig selv en forberedelse til skolen.',
+  'Læs „Min skoledag” flere gange frem til august. Gentagelse gør det ukendte kendt, og det mindsker uroen.',
+  'Forkerte svar straffes ikke: efter andet forsøg lyser det rigtige svar op. Så går barnet ikke i stå og bliver ikke frustreret.',
+  'Besøg gerne skolegården i ferien og tag billeder af klassen, knagerne og SFO. Fortæl ud fra billederne.',
+  '„Magiske ord” er sætninger, han skal bruge fra første dag (toilet, hjælp, „stop”). Øv dem også i leg derhjemme.',
+  'Appen vurderer eller diagnosticerer ikke noget. Det er kun leg og øvelse.'],
+ reset:'Slet alt fremskridt', resetSure:'Tryk igen for at bekræfte', saved:'Gemt ✔', close:'✔ Færdig'
+}};
+const L=()=>S.lang||'ro';
+function t(k,...a){const v=T[L()][k];return typeof v==='function'?v(...a):v;}
+const tx=o=>o[L()];
+
+/* ================= STARE ================= */
+const KEY='hai_la_scoala_v1';
+const DEF={lang:null,name:'',buddy:'🐻',school:'2027-08-09',sfo:'',stars:0,stickers:[],rot:0,numMax:5,numOk:0,letOk:{},today:{d:'',r:0,x:0},days:[],
+  settings:{len:5,maxRounds:4,speak:true,sound:true,vib:true,moves:true}};
+let S;
+try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem(KEY)||'{}'));S.settings=Object.assign({},DEF.settings,S.settings||{});}catch(e){S=JSON.parse(JSON.stringify(DEF));}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function touchToday(){const d=todayStr();if(S.today.d!==d)S.today={d,r:0,x:0};if(!S.days.includes(d))S.days.push(d);}
+
+/* ================= UTILE ================= */
+const $=id=>document.getElementById(id);
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nm=()=>S.name||'';
+function view(html){const a=$('app');a.innerHTML=`<div class="fade">${html}</div>`;window.scrollTo(0,0);}
+function setFocus(on){document.body.classList.toggle('focus',on);}
+function updHdr(){$('ttl').textContent=(S.buddy||'🎒')+' '+t('appName');$('starPill').textContent='⭐ '+S.stars;document.documentElement.lang=L();}
+function burst(x,y){for(let i=0;i<7;i++){const s=document.createElement('div');s.className='star';s.textContent=pick(['⭐','✨','🌟']);
+  s.style.left=(x??innerWidth/2)+'px';s.style.top=(y??innerHeight*.4)+'px';s.style.setProperty('--dx',(Math.random()*260-130)+'px');s.style.setProperty('--dy',(Math.random()*-220-30)+'px');
+  document.body.appendChild(s);setTimeout(()=>s.remove(),1000);}}
+function confetti(){for(let i=0;i<18;i++)setTimeout(()=>burst(rnd(innerWidth),innerHeight*.35+rnd(120)),i*40);}
+function buzz(p){try{if(S.settings.vib&&navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+let AC;function sound(kind){if(!S.settings.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  const notes=kind==='great'?[660,880,1100,1320]:kind==='ok'?[520,660,780]:kind==='pop'?[700]:[330,280];
+  notes.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=kind==='bad'?'triangle':'sine';o.frequency.value=f;const t0=AC.currentTime+i*.09;
+    g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(kind==='bad'?.07:.18,t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+.2);o.connect(g).connect(AC.destination);o.start(t0);o.stop(t0+.22);});}catch(e){}}
+
+/* ================= VOCE ================= */
+let UTTS=[]; // referințe păstrate: pe Android, Chrome altfel „pierde” frazele
+const clean=s=>String(s).replace(/<[^>]*>/g,'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2190}-\u{21FF}\u{FE0F}\u{200D}\u{20E3}]/gu,'').replace(/\s+/g,' ').trim();
+function voiceFor(lg){try{const n=x=>(x||'').replace('_','-').toLowerCase(),vs=speechSynthesis.getVoices();
+  return vs.find(v=>n(v.lang)===lg.toLowerCase())||vs.find(v=>n(v.lang).startsWith(lg.slice(0,2)));}catch(e){return null;}}
+function speakSeq(parts,force,onInfo){
+  if(!force&&!S.settings.speak)return;
+  try{
+    const ss=window.speechSynthesis;if(!ss||!window.SpeechSynthesisUtterance){onInfo&&onInfo(t('ttsNone'));return;}
+    const go=()=>{UTTS=[];let missing=false,first=null;
+      parts.forEach(p=>{if(!p)return;const txt=clean(p.t||p);if(!txt)return;const lg=p.lg||SL[L()];
+        const u=new SpeechSynthesisUtterance(txt);u.lang=lg;u.rate=p.rate||.9;u.volume=1;const v=voiceFor(lg);if(v)u.voice=v;else if(ss.getVoices().length)missing=true;
+        if(!first){first=u;u.onstart=()=>onInfo&&onInfo(t('ttsOk',v?v.name:lg));u.onerror=e=>{if(e.error!=='interrupted'&&e.error!=='canceled')onInfo&&onInfo(missing?t('ttsNoVoice'):t('ttsErr',e.error));};}
+        UTTS.push(u);ss.speak(u);});
+      if(onInfo&&missing)setTimeout(()=>onInfo(t('ttsNoVoice')),1500);};
+    if(ss.speaking||ss.pending){ss.cancel();setTimeout(go,150);}else{ss.resume();go();}
+  }catch(e){onInfo&&onInfo(t('ttsErr',e.message||e));}
+}
+const say=(txt,force)=>speakSeq([{t:txt}],force);
+const sayDa=(txt,force)=>speakSeq([{t:txt,lg:'da-DK'}],force);
+function stopSpeak(){try{speechSynthesis.cancel();}catch(e){}}
+if('speechSynthesis' in window){try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}catch(e){}}
+
+/* ================= ONBOARDING ================= */
+function ob1(){setFocus(false);updHdr();view(`<div class="card center"><div class="bigemo">🎒🏫</div><h2>${T.ro.obLang}</h2>
+  <div class="row" style="justify-content:center"><button class="btn" onclick="setLang('ro')">🇷🇴 Română</button><button class="btn" onclick="setLang('da')">🇩🇰 Dansk</button></div></div>`);}
+function setLang(l){S.lang=l;save();updHdr();ob2();}
+function ob2(){view(`<div class="card"><h2>${t('obName')}</h2><input class="inp" id="nm" maxlength="20" placeholder="${t('namePh')}" value="${esc(S.name)}">
+  <label class="lbl">${t('obDate')}</label><input class="inp" type="date" id="sd" value="${S.school}"><p class="muted small">${t('pSchoolNote')}</p>
+  <button class="btn" onclick="ob2Next()">${t('next')}</button></div>`);}
+function ob2Next(){const n=$('nm').value.trim();if(!n){$('nm').focus();return;}S.name=n[0].toUpperCase()+n.slice(1);S.school=$('sd').value||S.school;save();ob3();}
+function ob3(){view(`<div class="card center"><h2>${esc(t('obBuddy',nm()))}</h2><div class="row" style="justify-content:center">${BUDDIES.map(b=>`<button class="chip av" onclick="pickBuddy('${b}')">${b}</button>`).join('')}</div></div>`);
+  say(t('obBuddy',nm()));}
+function pickBuddy(b){S.buddy=b;save();updHdr();home(true);}
+
+/* ================= ACASĂ ================= */
+function countdown(){
+  if(!S.school)return t('cdNone');
+  const now=new Date();now.setHours(12,0,0,0);
+  const d=new Date(S.school+'T12:00:00');const days=Math.round((d-now)/864e5);
+  if(isNaN(days))return t('cdNone');
+  if(days<=0)return t('cdDone');
+  let s=days<=60?t('cdNights',days):t('cdMonths',Math.max(1,Math.round(days/30.4)));
+  if(S.sfo){const f=new Date(S.sfo+'T12:00:00');const fd=Math.round((f-now)/864e5);if(fd>0&&fd<=90&&f<d)s+=t('sfo',fd);}
+  return s;
+}
+function home(greet){
+  touchToday();save();setFocus(false);updHdr();stopRound();
+  const m=ROT[S.rot%ROT.length];
+  const tiles=['story','bag','scen','phrases','letters','numbers','feel','breathe','album'];
+  view(`<div class="buddy"><div class="av" onclick="say(t('hello',nm())+' '+countdown(),true)">${S.buddy}</div><div class="bubble">${esc(t('hello',nm()))} ${countdown()}</div></div>
+  <button class="hero" onclick="openK('${m}')"><span class="ico">${ICO[m]}</span><span><small>${t('todayM')}</small><b>${t('k')[m]}</b></span></button>
+  <div class="tiles">${tiles.map(k=>`<button class="tile" onclick="openK('${k}')"><span class="ico">${ICO[k]}</span>${t('k')[k]}</button>`).join('')}</div>
+  <button class="plink" onclick="gate(parents)">${t('parents')}</button>`);
+  if(greet)say(t('meet',nm()));
+}
+function openK(k){
+  if(k==='album')return album();
+  if(k==='breathe')return breathe(home);
+  if(k==='phrases')return phrasesList();
+  if(limitReached())return doneToday();
+  if(k==='story')return story(0);
+  if(k==='bag')return bag();
+  startRound(k);
+}
+function limitReached(){touchToday();const m=S.settings.maxRounds;return m>0&&S.today.r>=m+S.today.x;}
+function doneToday(){setFocus(false);view(`<div class="buddy"><div class="av">😴</div><div class="bubble">${esc(t('doneToday',nm()))}</div></div>
+  <div class="row" style="justify-content:center"><button class="btn" onclick="home()">${t('home')}</button></div>
+  <div class="center"><button class="plink" onclick="gate(()=>{S.today.x++;save();home();})">${t('oneMore')}</button></div>`);say(t('doneToday',nm()));}
+
+/* ================= GENERATOARE DE ÎNTREBĂRI ================= */
+function optsFrom(correct,pool,n){const o=[correct];for(const p of shuf(pool)){if(o.length>=n)break;if(p!==correct&&!o.includes(p))o.push(p);}return shuf(o);}
+const GEN={
+ letters(n){
+  const A=ALPH[L()],W=WORDS[L()],qs=[];
+  const first=(nm()[0]||'').toUpperCase();
+  if(A.includes(first))qs.push(qFindLetter(first,true));
+  while(qs.length<n){
+    // literele mai puțin sigure apar mai des
+    const weak=A.filter(c=>(S.letOk[L()+c]||0)<3);const ch=pick(weak.length&&Math.random()<.7?weak:A);
+    if(qs.length%2===1&&W[ch])qs.push(qStarts(ch));else qs.push(qFindLetter(ch,false));
+  }
+  return qs;
+ },
+ numbers(n){
+  const qs=[],types=shuf(['count','find','more','shape','pattern','after','count','find']);
+  for(let i=0;i<n;i++)qs.push(QN[types[i%types.length]]());
+  return qs;
+ },
+ scen(n){return shuf(SCEN).slice(0,n).map(qScen);},
+ phrases(n){return shuf(PHRASES).slice(0,n).map(qPhrase);},
+ feel(n){const a=[];let last=null;while(a.length<n){const f=pick(FEEL);if(f!==last){a.push(qFeel(f));last=f;}}return a;},
+ story(n){const qs=[];for(let k=0;k<2;k++){const idx=shuf(STORY.map((_,i)=>i)).slice(0,k?4:3).sort((a,b)=>a-b);qs.push(qOrder(idx));}return qs;}
+};
+function letterBtn(c){return `<span style="font-size:60px">${c}</span>`;}
+function qFindLetter(ch,personal){
+  return {say:[personal?t('findName',ch,nm()):t('findLetter',ch)],bubble:personal?t('findName',ch,nm()):t('findLetter',ch),
+   visual:`<button class="listen" onclick="speakQ(true)">👂</button>`,
+   opts:optsFrom(ch,ALPH[L()],personal?3:4).map(c=>({html:letterBtn(c),ok:c===ch})),cols:2,meta:{let:ch}};
+}
+function qStarts(ch){const [w,e]=WORDS[L()][ch];
+  return {say:[t('startsWith',w)],bubble:t('startsWith',w),visual:`<div class="bigemo">${e}</div><div class="word">${w}</div>`,
+   opts:optsFrom(ch,ALPH[L()],3).map(c=>({html:letterBtn(c),ok:c===ch})),cols:3,meta:{let:ch}};
+}
+const QN={
+ count(){const m=Math.min(S.numMax,10),n=1+rnd(m),o=pick(OBJ);
+  return {say:[t('count')],bubble:t('count'),visual:`<div class="cnt" id="cnt">${Array.from({length:n},(_,i)=>`<span onclick="tapCount(this)">${o}</span>`).join('')}</div>`,
+   opts:optsFrom(n,Array.from({length:Math.max(m,4)},(_,i)=>i+1),3).map(v=>({html:v,ok:v===n})),cols:3,meta:{num:1}};},
+ find(){const m=S.numMax,n=rnd(m+1);const pool=Array.from({length:m+1},(_,i)=>i);
+  return {say:[t('findNum',n)],bubble:t('findNum',n),visual:`<button class="listen" onclick="speakQ(true)">👂</button>`,
+   opts:optsFrom(n,pool,4).map(v=>({html:v,ok:v===n})),cols:2,meta:{num:1}};},
+ more(){const m=Math.min(Math.max(S.numMax,4),10);let a=1+rnd(m),b=1+rnd(m);while(a===b)b=1+rnd(m);const o=pick(OBJ);const grp=k=>`<div class="grp">${o.repeat(k)}</div>`;
+  return {say:[t('more')],bubble:t('more'),visual:'',opts:[{html:grp(a),ok:a>b},{html:grp(b),ok:b>a}],cols:2,big:1,meta:{num:1}};},
+ shape(){const keys=Object.keys(SHAPES),k=pick(keys),cols=shuf(COLORS);const nameS=SHAPES[k][L()];
+  return {say:[t('findShape',nameS)],bubble:t('findShape',nameS),visual:'',opts:shuf(keys).map((s,i)=>({html:SHAPES[s].svg(cols[i]),ok:s===k})),cols:3,meta:{num:1}};},
+ pattern(){const set=shuf(['🔴','🔵','🟢','🟡','🟣']).slice(0,3);const pats=[[0,1],[0,0,1],[0,1,2]];const p=pick(pats);const len=p.length===2?5:p.length*2;
+  const seq=Array.from({length:len},(_,i)=>set[p[i%p.length]]);const ans=set[p[len%p.length]];
+  return {say:[t('pattern')],bubble:t('pattern'),visual:`<div class="seq">${seq.join('')}<span>❓</span></div>`,opts:shuf(set).map(c=>({html:c,ok:c===ans})),cols:3,meta:{num:1}};},
+ after(){const m=S.numMax,n=rnd(m);const pool=Array.from({length:m+1},(_,i)=>i);
+  return {say:[t('after',n)],bubble:t('after',n),visual:`<div class="seq"><span class="box">${n}</span><span class="box">❓</span></div>`,
+   opts:optsFrom(n+1,pool,3).map(v=>({html:v,ok:v===n+1})),cols:3,meta:{num:1}};}
+};
+function qScen(s){const os=shuf(s.o);
+  return {say:[tx(s.q),...os.map(o=>tx(o))],bubble:tx(s.q),visual:`<div class="bigemo">${s.e}</div>`,
+   opts:os.map(o=>({html:`<span class="e">${o.e}</span><span>${esc(tx(o))}</span>`,sayOpt:tx(o),ok:!!o.ok,fb:o.fb?tx(o.fb):null})),cols:1,txt:1,breathe:s.breathe};
+}
+function qPhrase(p){const os=optsFrom(p,PHRASES,3);
+  return {say:[tx(p.sit)+' '+t('sayWhat'),...os.map(o=>({t:o.da,lg:'da-DK'}))],bubble:tx(p.sit)+' '+t('sayWhat'),visual:`<div class="bigemo">${p.e}</div>`,
+   opts:os.map(o=>({html:`<span>🇩🇰 ${esc(o.da)}</span>`,sayOpt:o.da,sayLg:'da-DK',ok:o===p,fb:o===p&&L()==='ro'?`„${o.da}” = „${o.ro}”`:null})),cols:1,txt:1};
+}
+function qFeel(f){const os=optsFrom(f,FEEL,3);
+  return {say:[t('feelQ',tx(f))],bubble:t('feelQ',tx(f)),visual:'',opts:os.map(o=>({html:`<span style="font-size:64px">${o.e}</span>`,ok:o===f,fb:o===f?tx(f.tip):null})),cols:3,breathe:f.breathe};
+}
+function qOrder(idx){const items=shuf(idx.map((si,rank)=>({si,rank})));
+  return {kind:'order',say:[t('orderQ')],bubble:t('orderQ'),items,next:0};
+}
+
+/* ================= MOTORUL DE RUNDĂ ================= */
+let R=null,idleT=null;
+function stopRound(){clearTimeout(idleT);}
+function startRound(kind){R={kind,qs:GEN[kind](kind==='story'?2:S.settings.len),i:0};showQ();}
+function pathHtml(){const n=R.qs.length;let h='';for(let i=0;i<n;i++)h+=`<i class="${i<R.i?'d':i===R.i?'now':''}"></i>`;return `<div class="path">${h}<b>🎁</b></div>`;}
+function showQ(){
+  setFocus(true);const q=R.qs[R.i];q.tries=0;q.t0=performance.now();q.locked=false;
+  let body='';
+  if(q.kind==='order'){
+    body=`<div class="opts c2">${q.items.map((it,j)=>`<button class="opt txt" style="flex-direction:column;align-items:center;text-align:center;padding:10px;min-height:140px" id="o${j}" onclick="tapOrder(${j})"><span class="e" style="font-size:48px">${STORY[it.si].e}</span><span style="font-size:15px">${esc(tx(STORY[it.si]))}</span></button>`).join('')}</div>`;
+  }else{
+    body=`<div class="visual">${q.visual||''}</div><div class="opts c${q.cols}">${q.opts.map((o,j)=>`<button class="opt${q.txt?' txt':''}" id="o${j}" onclick="choose(${j})">${o.html}${o.sayOpt?`<span class="spk" onclick="event.stopPropagation();speakSeq([{t:'${esc(o.sayOpt).replace(/'/g,"\\'")}',lg:'${o.sayLg||SL[L()]}'}],true)">🔊</span>`:''}</button>`).join('')}</div>`;
+  }
+  view(`<div class="qtop"><button class="iconbtn" onclick="home()">✖</button>${pathHtml()}<button class="iconbtn" onclick="speakQ(true)">🔊</button></div>
+   <div class="qbuddy"><div class="av" onclick="speakQ(true)">${S.buddy}</div><div class="bubble" id="bub">${esc(q.bubble)}</div></div>${body}<div id="fb"></div>`);
+  speakQ();armIdle();
+}
+function speakQ(force){const q=R&&R.qs[R.i];if(!q)return;speakSeq(q.say.map(p=>typeof p==='string'?{t:p}:p),force);armIdle();}
+function armIdle(){clearTimeout(idleT);const q=R&&R.qs[R.i];if(!q)return;
+  idleT=setTimeout(()=>{if(!R||R.qs[R.i]!==q||q.locked)return;const b=$('bub');if(b)b.textContent=t('idle',nm());speakSeq([{t:t('idle',nm())},...q.say.map(p=>typeof p==='string'?{t:p}:p)],false);},22000);}
+function bub(s){const b=$('bub');if(b)b.textContent=s;}
+function tapCount(el){if(el.classList.contains('t'))return;const c=document.querySelectorAll('#cnt span.t').length+1;el.classList.add('t');el.innerHTML+=`<em>${c}</em>`;sound('pop');say(String(c));armIdle();}
+function choose(j){
+  const q=R.qs[R.i];if(q.locked)return;const o=q.opts[j];const el=$('o'+j);armIdle();
+  if(o.ok){
+    q.locked=true;clearTimeout(idleT);el.classList.add('ok');
+    const r=el.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2);
+    sound(q.tries?'ok':'great');buzz(30);S.stars++;updHdr();
+    if(q.meta&&q.meta.let){const k=L()+q.meta.let;if(!q.tries)S.letOk[k]=(S.letOk[k]||0)+1;}
+    if(q.meta&&q.meta.num&&!q.tries){S.numOk++;if(S.numOk>=15&&S.numMax<10){S.numMax=10;}if(S.numOk>=45&&S.numMax<20){S.numMax=20;}}
+    save();
+    const pr=pick(t('praise',nm()));
+    if(o.fb){
+      bub(pr);
+      $('fb').innerHTML=`<div class="fb fade">✅ ${esc(o.fb)}<div class="row">${q.breathe?`<button class="btn acc" onclick="breathe(nextQ)">${t('breatheBtn')}</button>`:''}<button class="btn" onclick="nextQ()">${t('cont')}</button></div></div>`;
+      say(pr+' '+o.fb);setTimeout(()=>{const f=$('fb');if(f)f.scrollIntoView({behavior:'smooth',block:'end'});},100);
+    }else{bub(pr);say(pr);setTimeout(nextQ,1700);}
+  }else{
+    if(el.classList.contains('no'))return;
+    q.tries++;el.classList.add('shake','no');setTimeout(()=>el.classList.remove('shake'),400);sound('bad');buzz([20,40,20]);
+    const fast=performance.now()-q.t0<1300;
+    const msg=o.fb||(q.txt?t('gentle'):fast?t('lookAgain'):t('tryAgain'));
+    bub(msg);say(msg);
+    if(q.tries>=2||q.opts.filter(x=>!x.ok&&!$('o'+q.opts.indexOf(x)).classList.contains('no')).length===0){const k=q.opts.findIndex(x=>x.ok);$('o'+k).classList.add('glow');}
+  }
+}
+function tapOrder(j){
+  const q=R.qs[R.i];if(q.locked)return;const it=q.items[j];const el=$('o'+j);armIdle();
+  if(el.classList.contains('ok'))return;
+  if(it.rank===q.next){q.next++;el.classList.add('ok');el.insertAdjacentHTML('beforeend',`<span class="badge">${q.next}</span>`);sound('pop');
+    document.querySelectorAll('.opt.glow').forEach(x=>x.classList.remove('glow'));
+    if(q.next===q.items.length){q.locked=true;clearTimeout(idleT);sound('great');confetti();S.stars+=2;updHdr();save();const pr=pick(t('praise',nm()));bub(pr);say(pr);setTimeout(nextQ,1800);}
+  }else{q.tries++;el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),400);sound('bad');bub(t('tryAgain'));say(t('tryAgain'));
+    if(q.tries>=2){const k=q.items.findIndex(x=>x.rank===q.next);$('o'+k).classList.add('glow');}}
+}
+function nextQ(){if(!R)return home();R.i++;if(R.i>=R.qs.length)endRound();else showQ();}
+
+/* ================= RECOMPENSĂ + PAUZĂ ================= */
+function endRound(){
+  clearTimeout(idleT);touchToday();S.today.r++;
+  const k=R?R.kind:'';if(k===ROT[S.rot%ROT.length])S.rot++;
+  const free=STICKERS.filter(s=>!S.stickers.includes(s));const st=free.length?pick(free):pick(STICKERS);if(free.length)S.stickers.push(st);
+  save();R=null;setFocus(true);
+  view(`<div class="center"><div class="qbuddy" style="justify-content:center"><div class="av">${S.buddy}</div><div class="bubble" style="flex:none">${t('gift')}</div></div>
+   <button class="gift" id="gift" onclick="openGift('${st}')">🎁</button></div>`);
+  sound('great');say(pick(t('praise',nm()))+' '+t('gift'));
+}
+function openGift(st){sound('great');confetti();buzz([40,60,40]);
+  view(`<div class="center"><div class="sticker">${st}</div><h2>${t('newSticker')}</h2><div class="row" style="justify-content:center"><button class="btn" onclick="afterRound()">${t('cont')}</button></div></div>`);
+  say(t('newSticker'));}
+function afterRound(){if(S.settings.moves&&!limitReached())moveBreak(home);else home();}
+let mvT=null;
+function moveBreak(then){
+  setFocus(true);const m=pick(MOVES);const dur=15;let left=dur;const C=2*Math.PI*62;
+  view(`<div class="center"><h2>${t('moveT')}</h2><div class="mv">${m.e}</div><h2>${esc(tx(m))}</h2>
+   <svg class="ring" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" stroke="#cfe9df"/><circle id="arc" cx="75" cy="75" r="62" stroke="var(--acc)" stroke-dasharray="${C}" stroke-dashoffset="0" transform="rotate(-90 75 75)" stroke-linecap="round"/>
+   <text id="sec" x="75" y="88" text-anchor="middle" font-size="40" font-weight="900" fill="var(--ink)">${dur}</text></svg>
+   <button class="btn sec sm" onclick="endMove()">${t('skip')}</button></div>`);
+  say(t('moveT')+' '+tx(m));
+  window._mvThen=then;clearInterval(mvT);
+  mvT=setInterval(()=>{left--;const a=$('arc'),s=$('sec');if(!a){clearInterval(mvT);return;}a.setAttribute('stroke-dashoffset',C*(1-left/dur));s.textContent=left;
+    if(left<=0){clearInterval(mvT);sound('great');say(t('moveDone'));setTimeout(endMove,1200);}},1000);
+}
+function endMove(){clearInterval(mvT);const f=window._mvThen||home;window._mvThen=null;f();}
+
+/* ================= ZIUA MEA LA ȘCOALĂ ================= */
+function story(i){
+  setFocus(true);const s=STORY[i];const last=i===STORY.length-1;
+  view(`<div class="qtop"><button class="iconbtn" onclick="home()">✖</button><div class="dots" style="flex:1">${STORY.map((_,k)=>`<i class="${k<=i?'d':''}"></i>`).join('')}</div><button class="iconbtn" onclick="storySay(${i},true)">🔊</button></div>
+   <div class="story"><div class="bigemo">${s.e}</div><p>${esc(tx(s))}</p>
+    <button class="dk" onclick="sayDa('${esc(s.w).replace(/'/g,"\\'")}',true)">🇩🇰 ${esc(s.w)} 🔊</button></div>
+   <div class="snav"><button class="btn sec" ${i?'':'disabled style="opacity:.3"'} onclick="story(${i-1})">${t('prev')}</button>
+    ${last?`<button class="btn acc" onclick="startRound('story')">${t('storyGame')}</button>`:`<button class="btn" onclick="story(${i+1})">${t('nxt')}</button>`}</div>`);
+  storySay(i);
+}
+function storySay(i,force){const s=STORY[i];const parts=[];if(i===0)parts.push({t:t('storyIntro')});parts.push({t:tx(s)});
+  if(L()==='ro')parts.push({t:s.w,lg:'da-DK',rate:.8});speakSeq(parts,force);}
+
+/* ================= GHIOZDANUL ================= */
+let B=null;
+function bag(){
+  setFocus(true);const ok=shuf(BAG.filter(b=>b.ok)).slice(0,4),no=shuf(BAG.filter(b=>!b.ok)).slice(0,2);
+  B={items:shuf(ok.concat(no)),need:4,got:0};R={kind:'bag',qs:[],i:0};
+  view(`<div class="qtop"><button class="iconbtn" onclick="home()">✖</button><div style="flex:1;text-align:center;font-weight:900;font-size:22px" id="bagc">0 / 4</div><button class="iconbtn" onclick="say(t('bagQ'),true)">🔊</button></div>
+   <div class="qbuddy"><div class="av">${S.buddy}</div><div class="bubble" id="bub">${t('bagQ')}</div></div>
+   <div class="bagbox" id="bagbox">🎒</div>
+   <div class="items">${B.items.map((it,j)=>`<button class="item" id="b${j}" onclick="tapBag(${j})">${it.e}<small>${L()==='da'?it.da:it.ro}</small></button>`).join('')}</div>`);
+  say(t('bagQ'));
+}
+function tapBag(j){
+  const it=B.items[j],el=$('b'+j);if(el.classList.contains('gone'))return;
+  if(it.ok){el.classList.add('gone');B.got++;$('bagc').textContent=B.got+' / '+B.need;const bb=$('bagbox');bb.classList.remove('pop');void bb.offsetWidth;bb.classList.add('pop');
+    sound('ok');buzz(25);S.stars++;updHdr();save();
+    const extra=it.da==='idrætstøj'?' '+t('bagGym'):'';
+    if(L()==='ro'){bub(`${it.e} ${it.ro} = 🇩🇰 ${it.da}${extra}`);speakSeq([{t:it.ro+'. În daneză:'},{t:it.da,lg:'da-DK',rate:.8},{t:extra}]);}
+    else{bub(`${it.e} ${it.da}!${extra}`);say(it.da+'!'+extra);}
+    if(B.got>=B.need){setTimeout(()=>{confetti();bub(t('bagDone'));say(t('bagDone'));setTimeout(endRound,2200);},1400);}
+  }else{el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),400);sound('bad');const m=t('bagNo',L()==='da'?it.da:it.ro);bub(it.e+' '+m);say(m);}
+}
+
+/* ================= RESPIRAȚIE ================= */
+let brT=null;
+function breathe(then){
+  setFocus(true);clearTimeout(brT);stopRound();
+  view(`<div class="qtop"><button class="iconbtn" onclick="clearTimeout(brT);home()">✖</button><div style="flex:1"></div></div>
+   <div class="qbuddy"><div class="av">${S.buddy}</div><div class="bubble" id="bub">${t('breatheGo')}</div></div>
+   <div class="balloon" id="bal"></div><div class="breath-t" id="brt"></div><div class="center" id="brn"></div>`);
+  say(t('breatheGo'));let cyc=0;const N=4;
+  const step=phase=>{const bal=$('bal');if(!bal)return;
+    if(phase==='in'){bal.classList.add('in');$('brt').textContent=t('breatheIn');say(t('breatheIn'));$('brn').textContent='🎈'.repeat(cyc+1);brT=setTimeout(()=>step('out'),4200);}
+    else{bal.classList.remove('in');$('brt').textContent=t('breatheOut');say(t('breatheOut'));cyc++;
+      if(cyc<N)brT=setTimeout(()=>step('in'),4200);
+      else brT=setTimeout(()=>{S.stars++;updHdr();save();sound('great');$('brt').textContent='';bub(t('breatheDone'));say(t('breatheDone'));
+        $('brn').innerHTML=`<button class="btn" onclick="(${then===home?'home':'nextQ'})()">${t('cont')}</button>`;},4200);}};
+  brT=setTimeout(()=>step('in'),2600);
+}
+
+/* ================= CUVINTE MAGICE ================= */
+function phrasesList(){
+  setFocus(false);stopRound();
+  view(`<div class="qbuddy"><div class="av">${S.buddy}</div><div class="bubble">${t('phIntro')}</div></div>
+   ${PHRASES.map((p,i)=>`<button class="ph" onclick="sayPh(${i})"><span class="e">${p.e}</span><span><b>${esc(p.da)} 🔊</b>${L()==='ro'?`<small>${esc(p.ro)}</small>`:''}</span></button>`).join('')}
+   <div class="row" style="justify-content:center;margin-top:8px"><button class="btn sec" onclick="home()">${t('home')}</button><button class="btn acc" onclick="limitReached()?doneToday():startRound('phrases')">${t('phPlay')}</button></div>`);
+  say(t('phIntro'));
+}
+function sayPh(i){const p=PHRASES[i];if(L()==='ro')speakSeq([{t:p.ro},{t:p.da,lg:'da-DK',rate:.8}],true);else sayDa(p.da,true);}
+
+/* ================= ALBUM ================= */
+function album(){setFocus(false);
+  view(`<h2>📒 ${t('albumT',S.stickers.length,STICKERS.length)}</h2><div class="album">${STICKERS.map(s=>S.stickers.includes(s)?`<div onclick="sound('pop')">${s}</div>`:`<div class="lock">❔</div>`).join('')}</div>
+  <div class="row" style="justify-content:center;margin-top:16px"><button class="btn" onclick="home()">${t('home')}</button></div>`);
+  say(t('albumT',S.stickers.length,STICKERS.length));}
+
+/* ================= PĂRINȚI ================= */
+function gate(then){setFocus(false);stopSpeak();const a=11+rnd(9),b=6+rnd(4);window._gate={then,ans:a+b};
+  view(`<div class="card"><h2>${t('gateQ',a,b)}</h2><input class="inp" id="ga" type="number" inputmode="numeric"><div class="row" style="margin-top:12px"><button class="btn sec" onclick="home()">${t('back')}</button><button class="btn" onclick="gateOk()">${t('ok')}</button></div></div>`);
+  setTimeout(()=>$('ga')&&$('ga').focus(),100);}
+function gateOk(){if(+$('ga').value===window._gate.ans)window._gate.then();else{$('ga').classList.add('shake');$('ga').value='';setTimeout(()=>$('ga').classList.remove('shake'),400);}}
+function chips(arr,cur,fn){return `<div class="chips">${arr.map(([v,l])=>`<button class="chip${v===cur?' on':''}" onclick="${fn}(${JSON.stringify(v).replace(/"/g,"'")})">${l}</button>`).join('')}</div>`;}
+function parents(){
+  setFocus(false);const st=S.settings;
+  const sureLet=Object.keys(S.letOk).filter(k=>k.startsWith(L())&&S.letOk[k]>=3).length;
+  view(`<div class="card"><h2>${t('pT')}</h2>
+   <label class="lbl">${t('pLang')}</label>${chips([['ro','🇷🇴 Română'],['da','🇩🇰 Dansk']],S.lang,'pSet.lang')}
+   <label class="lbl">${t('pName')}</label><input class="inp" id="pn" maxlength="20" value="${esc(S.name)}" onchange="pSet.name(this.value)">
+   <label class="lbl">${t('pBuddy')}</label><div class="chips">${BUDDIES.map(b=>`<button class="chip av${b===S.buddy?' on':''}" onclick="pSet.buddy('${b}')">${b}</button>`).join('')}</div>
+   <label class="lbl">${t('pSchool')}</label><input class="inp" type="date" value="${S.school}" onchange="pSet.school(this.value)"><p class="muted small">${t('pSchoolNote')}</p>
+   <label class="lbl">${t('pSfo')}</label><input class="inp" type="date" value="${S.sfo}" onchange="pSet.sfo(this.value)">
+   <label class="lbl">${t('pLen')}</label>${chips([[3,'3'],[5,'5'],[7,'7']],st.len,'pSet.len')}
+   <label class="lbl">${t('pMax')}</label>${chips([[2,'2'],[3,'3'],[4,'4'],[6,'6'],[0,t('pInf')]],st.maxRounds,'pSet.max')}
+   <label class="ck"><input type="checkbox" ${st.speak?'checked':''} onchange="pSet.ck('speak',this.checked)">${t('pSpeak')}</label>
+   <button class="btn sec sm" onclick="testVoice()">${t('testVoice')}</button><p class="muted small" id="ttsInfo"></p>
+   <label class="ck"><input type="checkbox" ${st.sound?'checked':''} onchange="pSet.ck('sound',this.checked)">${t('pSound')}</label>
+   <label class="ck"><input type="checkbox" ${st.vib?'checked':''} onchange="pSet.ck('vib',this.checked)">${t('pVib')}</label>
+   <label class="ck"><input type="checkbox" ${st.moves?'checked':''} onchange="pSet.ck('moves',this.checked)">${t('pMoves')}</label>
+  </div>
+  <div class="card"><h3>${t('pProg')}</h3><div class="stat"><span>${t('sStars',S.stars)}</span><span>${t('sSt',S.stickers.length)}</span><span>${t('sDays',S.days.length)}</span><span>${t('sLet',sureLet)}</span><span>${t('sNum',S.numMax)}</span><span>${t('sToday',S.today.r)}</span></div></div>
+  <div class="card"><h3>${t('pTips')}</h3><ul class="tips">${t('tips').map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  <div class="row" style="justify-content:space-between"><button class="btn sec sm" id="rst" onclick="resetAll()">${t('reset')}</button><button class="btn" onclick="home()">${t('close')}</button></div>`);
+}
+const pSet={
+ lang(v){S.lang=v;save();updHdr();parents();},
+ name(v){v=v.trim();if(v){S.name=v[0].toUpperCase()+v.slice(1);save();}},
+ buddy(v){S.buddy=v;save();updHdr();parents();},
+ school(v){S.school=v;save();}, sfo(v){S.sfo=v;save();},
+ len(v){S.settings.len=v;save();parents();}, max(v){S.settings.maxRounds=v;save();parents();},
+ ck(k,v){S.settings[k]=v;save();if(k==='speak'&&v)testVoice();}
+};
+function testVoice(){const i=$('ttsInfo');if(i)i.textContent='…';speakSeq([{t:t('voiceSample',nm())},{t:'Hej! Godmorgen!',lg:'da-DK'}],true,m=>{const i=$('ttsInfo');if(i)i.textContent=m;});}
+let rstArm=false;
+function resetAll(){if(!rstArm){rstArm=true;$('rst').textContent=t('resetSure');setTimeout(()=>{rstArm=false;const r=$('rst');if(r)r.textContent=t('reset');},4000);return;}
+  try{localStorage.removeItem(KEY);}catch(e){}S=JSON.parse(JSON.stringify(DEF));rstArm=false;ob1();}
+
+/* ================= START ================= */
+updHdr();
+if(!S.lang)ob1();else if(!S.name)ob2();else home();
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
